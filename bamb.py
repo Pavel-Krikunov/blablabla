@@ -22,6 +22,11 @@ class Bomb(pygame.sprite.Sprite):
         self.rect.x = pos[0]
         self.rect.y = pos[1]
 
+    def movement(self, pos):
+        self.rect.x = event.pos[0]
+        self.rect.y = event.pos[1]
+        pygame.mouse.set_visible(False)
+
     def bang(self):
         self.image = Bomb.image2
         self.image = pygame.transform.scale(self.image, (50, 50))
@@ -36,19 +41,16 @@ if __name__ == '__main__':
     clock = pygame.time.Clock()
     all_sprites = pygame.sprite.Group()
     running = True
-    flag = False
+    bomb1 = Bomb((0, 0), all_sprites)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                flag = True
-                bomb = Bomb(event.pos, all_sprites)
-            if event.type == pygame.KEYDOWN:
-                for bomb in all_sprites:
-                    bomb.bang()
-
-        if flag:
+            if event.type == pygame.MOUSEMOTION:
+                bomb1.movement(event.pos)
+        screen.fill((0, 0, 0))
+        if pygame.mouse.get_focused():
+            pygame.mouse.set_visible(False)
             all_sprites.draw(screen)
         clock.tick(fps)
         pygame.display.flip()
